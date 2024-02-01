@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style_2.css') }}">
+</head>
+<body> 
+{% extends "base.html" %}
+
+{% block user_page %}
+<div class="view_s_title">
+  <h1>View Schedule Tasks</h1>
+</div>
+<table class="report_table">
+      <tr>
+          <th class="sid">Id </th>
+          <th>Title    </th>
+          <th>Username    </th>
+          <th>Social App    </th>
+          <th>Content  </th>
+          <th>Date    </th>
+          <th></th>
+          {% for i in my_data %}
+          <tr><td class="ssid">{{ i[0] }}</td><td>{{ i[1] }}</td><td>{{ i[2] }}</td><td>{{ i[3] }}</td>
+          <td>
+            <button data-id="model" data-target="#mymodel">Show Content</button>
+
+      <div id="mymodel" class="model">
+      <div class="model-content">
+      
+      <span class="close" data-close="model">&times;</span>
+
+      <div class="testdiv">
+      <label>Post Content :</label><br>
+      <textarea id="my-textarea" cols="70" rows="10"></textarea><br>
+      <button onClick="update_content(this)" type="button">Update</button>
+    </div>
+      
+      </div>
+        </div>
+          </td>
+
+
+          <td>{{ i[4] }}</td><td><button value="delete" class="workinghour_submit" onClick="delete_task(this)">Delete</button></td></tr>
+        {% endfor %}
+</table>
+</body>
+{% endblock %}
+{% block sel_js %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+{% endblock %}
+</html>

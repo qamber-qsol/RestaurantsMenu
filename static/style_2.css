@@ -1,0 +1,23 @@
+div.usersname > h3 {     
+    margin: 0px 0px -24px -3px;
+    display: inline;
+    color: #414141;
+    font-size: 26px;
+    text-transform: capitalize;
+    font-weight: 700;
+}
+
+.usersname{
+    margin: 0px;
+    width: 406px;
+    height: 88px;
+    float: right;
+    padding-top: 36px;
+    padding-right: 58px;
+    text-align: end;
+
+}
+li a{
+    color: rgb(128, 44, 44);
+}
+

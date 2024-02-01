@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style_2.css') }}">
+</head>
+<body> 
+{% extends "base.html" %}
+
+{% block user_page %}
+<div class="view_s_title">
+  <h1>View Conections</h1>
+</div><br>
+{% for i in facebook_data %}
+
+<div class="token_box">
+  <a href="#" class="fa fa-facebook" id="fa2"></a>
+  <h2>{{ i[0] }} </h2>
+  <h3>{{ i[1] }} Days Left </h3>
+  <button type="submit"  id="fb_submit">       
+    Reconnect
+  </button>
+</div>
+
+{% endfor %}
+
+{% for i in insta_data %}
+
+<div class="token_box">
+  <a href="#" class="fa fa-instagram" id="fa2"></a>
+  <h2>{{ i[0] }} </h2>
+  <h3>{{ i[1] }} Days Left </h3>
+  <button type="submit"  id="fb_submit">       
+    Reconnect
+  </button>
+</div>
+
+{% endfor %}
+
+{% for i in lkd_data %}
+
+<div class="token_box">
+  <a href="#" class="fa fa-linkedin" id="fa2"></a>
+  <h2>{{ i[0] }} </h3>
+  <h3>{{ i[1] }} Days Left </h3>
+  <button type="submit"  id="fb_submit">       
+    Reconnect
+  </button> 
+  </div>
+
+{% endfor %}
+
+{% for i in tw_data %}
+
+<div class="token_box">
+  <a href="#" class="fa fa-twitter" id="fa2"></a>
+  <h2>{{ i[0] }} </h3>
+  <h3>{{ i[1] }} Days Left </h3>
+  <button type="submit"  id="fb_submit">       
+    Reconnect
+  </button> 
+  </div>
+
+{% endfor %}
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+{% endblock %}
+</html>

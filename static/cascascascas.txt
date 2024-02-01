@@ -1,0 +1,12 @@
+const app = {
+  $delimiters: ['${', '}'],
+  text: "",
+  updateText(event) {
+    this.text = event.target.value;
+    const newText = this.text;
+    if (newText.includes(' ')) {
+      console.log("space");
+    }
+  },
+};
+const vm = PetiteVue.createApp(app).mount();
