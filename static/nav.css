@@ -58,8 +58,17 @@
 }
 .single_menu {
     position: relative;
-    margin-bottom: 75px;
+    
     transition: .3s;
+    border-radius: 20px;
+    
+}
+.maindiv_menu {
+    position: relative;
+    
+    transition: .3s;
+    border-radius: 20px;
+    
 }
 .single_menu:hover img{
     -webkit-clip-path: polygon(0% 0%, 100% 0, 100% 50%, 100% 100%, 0% 100%);
@@ -67,17 +76,13 @@ clip-path: polygon(0% 0%, 100% 0, 100% 50%, 100% 100%, 0% 100%);
 
 }
 .single_menu img {
-    width: 33%;
-    position: absolute;
-    height: 140px;
-    -webkit-clip-path: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
-    clip-path: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
+    width: 100%;
     transition: .3s;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 20px;
 }
 .menu_content {
-    padding-left: 200px;
+    /* padding-left: 200px; */
 }
 .menu_content h4 {
     font-size: 25px;
