@@ -37,24 +37,33 @@
 .nav-item {
     display: inline-block;
     text-align: center;
+    border-radius: 27px!important;
 }
 .nav-tabs .nav-link{
     transition: .3s;
 }
 .nav-tabs .nav-link.active {
-    background: #c0392b;
-    color: #fff;
-    font-weight: 700;
-    border: 1px solid #c0392b;
-    text-transform: capitalize;
+    
+   
+   
+    text-transform: capitalize!important;
+    color: #ffffff!important;
+    background-color: black!important;
+    /* border-color: #dee2e6 #dee2e6 #fff; */
+    border-radius: 27px!important;
+
 }
 .nav-link {
     color: #000;
 }
+.nav-tabs {
+    border-bottom: 1px solid #ffffff!important;
+}
 .nav-tabs .nav-link:hover {
-    background: #c0392b;
-    color: #fff;
-    border: 1px solid #c0392b;
+    color: #ffffff!important;
+    background-color: black!important;
+    /* border-color: #dee2e6 #dee2e6 #fff; */
+    border-radius: 27px!important;
 }
 .single_menu {
     position: relative;
