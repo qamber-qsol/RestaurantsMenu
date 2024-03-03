@@ -71,6 +71,7 @@
 			let baseUrl = new URL(window.location.href);
 			baseUrl = `${baseUrl.protocol}//${baseUrl.hostname}:${baseUrl.port}`;
 			document.querySelector('.loader-wrapper').style.display = 'flex';
+			console.log(baseUrl);
 			axios({
 			method: 'POST',
 			url: baseUrl + '/menudata',
