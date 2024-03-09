@@ -69,8 +69,9 @@
     border-radius: 27px!important;
 }
 .single_menu {
+    border: 2px solid transparent; /* Set initial border to transparent */
     position: relative;
-    
+    transition: border-color 0.3s ease; /* Add transition for border color change */
     transition: .3s;
     border-radius: 20px;
     
@@ -81,6 +82,9 @@
     transition: .3s;
     border-radius: 20px;
     
+}
+.single_menu:hover{
+    border: 2px solid rgb(27, 27, 27);
 }
 .single_menu:hover img{
     -webkit-clip-path: polygon(0% 0%, 100% 0, 100% 50%, 100% 100%, 0% 100%);
