@@ -68,17 +68,17 @@
     /* border-color: #dee2e6 #dee2e6 #fff; */
     border-radius: 27px!important;
 }
-.single_menu {
-    border: 2px solid transparent; /* Set initial border to transparent */
+.maindiv_menu {
     position: relative;
-    transition: border-color 0.3s ease; /* Add transition for border color change */
+    
     transition: .3s;
     border-radius: 20px;
     
 }
-.maindiv_menu {
+.single_menu {
+    border: 2px solid transparent; /* Set initial border to transparent */
     position: relative;
-    
+    transition: border-color 0.3s ease; /* Add transition for border color change */
     transition: .3s;
     border-radius: 20px;
     
@@ -92,6 +92,28 @@ clip-path: polygon(0% 0%, 100% 0, 100% 50%, 100% 100%, 0% 100%);
 
 }
 .single_menu img {
+    width: 100%;
+    transition: .3s;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+}
+.single_Menu {
+    border: 2px solid transparent; /* Set initial border to transparent */
+    position: relative;
+    transition: border-color 0.3s ease; /* Add transition for border color change */
+    transition: .3s;
+    border-radius: 20px;
+    
+}
+.single_Menu:hover{
+    /* border: 2px solid rgb(27, 27, 27); */
+}
+.single_Menu:hover img{
+    -webkit-clip-path: polygon(0% 0%, 100% 0, 100% 50%, 100% 100%, 0% 100%);
+clip-path: polygon(0% 0%, 100% 0, 100% 50%, 100% 100%, 0% 100%);
+
+}
+.single_Menu img {
     width: 100%;
     transition: .3s;
     border: 1px solid #ddd;
