@@ -58,7 +58,7 @@
 	
 	<div class="modal fade" id="subscribeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 		aria-hidden="true">
-		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header border-bottom-0">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -111,6 +111,27 @@
 			</div>
 		</div>
 	</div>
+	<div class="modal fade" id="RamzanMenu" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog  modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header border-bottom-0">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="main">
+						<div class="imagesection">
+							<img class="w-100" src="https://dl5hm3xr9o0pk.cloudfront.net/instagram/IMG-20240310-WA0010 (1).jpg">
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
 	<section id="our_menu" class="pt-5 pb-5">
 		<div class="container">
 			<div class="row">
@@ -141,6 +162,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script>
 		$(document).ready(function () {
+			$('#RamzanMenu').modal('show');
 			let baseUrl = new URL(window.location.href);
 			baseUrl = `${baseUrl.protocol}//${baseUrl.hostname}:${baseUrl.port}`;
 			document.querySelector('.loader-wrapper').style.display = 'flex';
@@ -174,7 +196,7 @@
 						<div class="row">
 							
 								${items.map(data => `
-								<div class="col-lg-2 col-md-2 h-100 m-0 p-0 px-1 col-sm-6 pb-2 col-6"><div class="bg-white  h-100 p-2 shadow-lg single_menu" data-menuoption='${data[4]}'>
+								<div class="col-xl-2 col-lg-3 col-md-4 h-100 m-0 p-0 px-1 col-sm-6 pb-2 col-6"><div class="bg-white  h-100 p-2 shadow-lg single_menu" data-menuoption='${data[4]}'>
 									<div class="m-0 p-0">
 										<div class="border-0"><img class="MenuImage" src="${data[0]}"></div>
 										<div><div class="text-capitalize font-weight-bold h6 my-3 text-center text-dark MenuTitle">${formatName(data[1])}</div></div>
