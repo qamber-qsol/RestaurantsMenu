@@ -162,7 +162,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script>
 		$(document).ready(function () {
-			$('#RamzanMenu').modal('show');
+			// $('#RamzanMenu').modal('show');
 			let baseUrl = new URL(window.location.href);
 			baseUrl = `${baseUrl.protocol}//${baseUrl.hostname}:${baseUrl.port}`;
 			document.querySelector('.loader-wrapper').style.display = 'flex';
@@ -260,7 +260,7 @@
             });
 			$('#optionMain').removeClass('d-none');
         }
-		// $('#subscribeModal').modal('show');
+		$('#subscribeModal').modal('show');
 				
 	
 	});
