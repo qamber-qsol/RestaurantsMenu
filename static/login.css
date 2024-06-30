@@ -10,7 +10,11 @@
   }
   
   html {
-    background: linear-gradient(to right bottom, #fbdb89, #f48982);
+    background: linear-gradient(to right bottom, #000000, #c40109);
+
+
+
+
     background-repeat: no-repeat;
     background-size: cover;
     width: 100%;
@@ -65,7 +69,7 @@
   }
   
   .btn--form {
-    background-color: #f48982;
+    background-color: #000000;
     color: #fdf2e9;
     align-self: end;
     padding: 8px;

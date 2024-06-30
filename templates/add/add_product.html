@@ -1,0 +1,64 @@
+{% extends "dashboard.html" %}
+    
+    {% block user_page %}
+
+<main class="container-fluid">
+ <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left py-3 px-4">
+<div class="text-dark">
+<h1 class="h3 text-primary">Add New Product</h1>
+<div class="row">
+    <div class="col-md-4">
+        <label class="mb-1">Product Image</label>
+        <div class="py-2">
+            <div class="">
+                <img class="img-fluid" src="https://dl5hm3xr9o0pk.cloudfront.net/instagram/p-details-big.jpg" style="
+        max-width: 76%;
+    ">
+            </div>
+        </div>
+        <input type="file" class="py-3">
+        
+      </div>
+  <div class="col-md-4">
+    <label class="mb-2">Product Name *</label>
+    <input class="form-control" type="text" required>
+    <label class="mb-2">Product Price *</label>
+    <input class="form-control" type="number">
+    <label class="mb-2">Product Category *</label>
+    <div class="row m-0">
+        <div class="col-11 p-0 pr-2">
+            <select class="form-control">
+                <option value="0">Fast Food</option>
+                <option value="1">Bevergars</option>
+                <option value="3">Sandwitches</option>
+            </select>
+        </div>
+        <div class="col-1 m-0 p-0">
+            <button class="align-content-center align-items-center btn btn-outline-dark d-flex h-100 justify-content-center w-100" type="button"><i class="fa fa-plus" aria-hidden="true"></i></button>
+        </div>
+    </div>
+    <label class="mb-2">Product Description </label>
+    <textarea draggable="false" class="form-control"></textarea>
+  </div>
+  <div class="col-md-4">
+    <label class="mb-1">FIRST BAG</label>
+    <input class="form-control" type="time">
+    <label class="mb-1">LAST BAG</label>
+    <input class="form-control" type="time">
+    <label class="mb-1">FIRST BCT RAMP</label>
+    <input class="form-control" type="time">
+    <label class="mb-1">LAST BCT RAMP</label>
+    <input class="form-control" type="time">
+    <label class="mb-1">NO OF BAGS</label>
+    <input class="form-control" type="Text">
+  </div>
+
+</div>
+<div class="row m-0">
+<label class="mb-1">REMARKS</label>
+<input class="form-control" type="Text">
+</div>
+</div>
+  </main>
+
+  {% endblock %}

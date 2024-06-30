@@ -1,10 +1,12 @@
 from flask import Flask
 from config import Config
 from routes import routes
+from dotenv import load_dotenv
+import os
 
-
-	
 def create_app():
+    load_dotenv()  # Load environment variables from .env file
+
     app = Flask(__name__)
     app.config.from_object(Config)
     
@@ -16,10 +18,6 @@ def create_app():
     app.register_blueprint(routes)
 
     return app
-
-# @app.route('/')
-# def hello_world():
-# 	return render_template('base.html')
 
 if __name__ == '__main__':
     app = create_app()

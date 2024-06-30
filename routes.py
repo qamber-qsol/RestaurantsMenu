@@ -11,21 +11,34 @@ mysql = MySQL()
 def index():
     return render_template('base.html')
 
+@routes.route('/add_product')
+def add_product():
+    return render_template('add/add_product.html')
+
+@routes.route('/dashboard')
+def dashboard():
+    return render_template('welcome.html')
+
 @routes.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        email = request.form['email']
         password = request.form['password']
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM users WHERE username = %s", (username,))
+        cur.execute("SELECT * FROM users WHERE email = %s", (email,))
         user = cur.fetchone()
+        print(user)
         cur.close()
-        if user and check_password_hash(user['password'], password):
-            session['username'] = user['username']
+        if user and check_password_hash(user[3], password):  # Access the password using index 1
+            session['Uemail'] = user[2]  # Access the email using index 0
+            session['Uname'] = user[1]
+            session['Uid'] = user[0]
+
             flash('Login successful!')
-            return redirect(url_for('routes.index'))
+            return render_template('welcome.html')
         else:
-            flash('Invalid credentials, please try again.')
+            flash('Invalid credentials. Please try again.')
+            return render_template('login.html')
     return render_template('login.html')
 
 
@@ -39,7 +52,7 @@ def add_user():
         hashed_password = generate_password_hash(password)
         
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO users (name, email, password) VALUES (%s, %s, %s)", (name, email, hashed_password))
+        cur.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)", (name, email, hashed_password))
         mysql.connection.commit()
         cur.close()
         
@@ -58,3 +71,11 @@ def get_data():
 			for row in reader:
 				data.append(row)
 		return jsonify(data)
+
+@routes.route('/logout')
+def logout():
+    session.pop('Uemail', None)
+    session.pop('Uname', None)
+    session.pop('Uid', None)
+    flash('You have been logged out.')
+    return redirect(url_for('routes.login'))
