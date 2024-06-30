@@ -3,7 +3,9 @@
 body{
   font-family: 'Barlow', sans-serif;
 }
-
+textarea {
+    resize: none;
+  }
 a:hover{
   text-decoration: none;
 }
