@@ -1,61 +1,132 @@
 {% extends "dashboard.html" %}
     
-    {% block user_page %}
+{% block user_page %}
 
 <main class="container-fluid">
  <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left py-3 px-4">
-<div class="text-dark">
-<h1 class="h3 text-primary">Add New Product</h1>
-<div class="row">
-    <div class="col-md-4">
-        <label class="mb-1">Product Image</label>
-        <div class="py-2">
-            <div class="">
-                <img class="img-fluid" src="https://dl5hm3xr9o0pk.cloudfront.net/instagram/p-details-big.jpg" style="
-        max-width: 76%;
-    ">
+    <div class="text-dark">
+        <h1 class="h3 text-primary">Add New Product</h1>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="mb-1">Product Image</label>
+                <div class="py-2">
+                    <div class="">
+                        <img id="product_icon" class="img-fluid" src="https://dl5hm3xr9o0pk.cloudfront.net/instagram/p-details-big.jpg" style="max-width: 76%;">
+                    </div>
+                </div>
+                <input type="file" class="py-3" id="ProductImageUploader">
+            </div>
+            <div class="col-md-4">
+                <label class="mb-2">Product Name *</label>
+                <input id="product_name" class="form-control" type="text" required>
+                <label class="mb-2">Product Price *</label>
+                <input id="product_price" class="form-control" type="number">
+                <label class="mb-2">Product Category *</label>
+                <div class="row m-0">
+                    <div class="col-11 p-0 pr-2">
+                        <select class="form-control" id="mycategory">
+                            <option value="0">Fast Food</option>
+                            <option value="1">Bevergars</option>
+                            <option value="3">Sandwitches</option>
+                        </select>
+                    </div>
+                    <div class="col-1 m-0 p-0">
+                        <button class="align-content-center align-items-center btn btn-outline-dark d-flex h-100 justify-content-center w-100" type="button" data-toggle="modal" data-target="#CategoryModal"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <label class="mb-2">Product Description</label>
+                <textarea id="product_desc" draggable="false" class="form-control" rows="5"></textarea>
+            </div>
+            <div class="col-md-4">
+                <label class="">Custom Fields</label>
+                <div id="app" style="margin-bottom: 4.5em;">
+                    <form @submit.prevent="submitForm">
+                        <div class="my-1 CustomFields" v-for="(field, index) in fields" :key="field.fieldId">
+                            
+                            <div class="align-items-center d-flex">
+                                <label class="m-0 pr-3 label_title text-capitalize">$[[ field.fieldName ]]:</label>
+                                <input class="bg-white label_value border fieldName form-control shadow-none" :value="field.typePrice" />
+                                <button @click="removeField(field.fieldId)" class="btn form-control h-100 text-danger w-auto"><i class="bx bx-trash h3 m-0 p-0"></i></button>
+                            </div>
+                        </div>
+                        <div class="m-0 row w-100 my-2">
+                            <div class="col-9 d-flex p-0">
+                                <input type="text" placeholder="Label Name*" class="bg-white border fieldName form-control m-0 py-4 shadow-none" v-model="fieldName">
+                                <input type="number" placeholder="Price*" class="bg-white border fieldName form-control m-0 py-4 shadow-none" v-model="fieldPrice">
+                            </div>
+                            <div class="align-items-center col-3 d-flex p-0 px-1 "><button type="button" @click="addField" class="btn btn-outline-secondary h-100 m-0"><i class="fa fa-plus" aria-hidden="true"></i></button></div>
+                        </div>
+                        <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+                    </form>
+                </div>
             </div>
         </div>
-        <input type="file" class="py-3">
-        
-      </div>
-  <div class="col-md-4">
-    <label class="mb-2">Product Name *</label>
-    <input class="form-control" type="text" required>
-    <label class="mb-2">Product Price *</label>
-    <input class="form-control" type="number">
-    <label class="mb-2">Product Category *</label>
-    <div class="row m-0">
-        <div class="col-11 p-0 pr-2">
-            <select class="form-control">
-                <option value="0">Fast Food</option>
-                <option value="1">Bevergars</option>
-                <option value="3">Sandwitches</option>
-            </select>
-        </div>
-        <div class="col-1 m-0 p-0">
-            <button class="align-content-center align-items-center btn btn-outline-dark d-flex h-100 justify-content-center w-100" type="button"><i class="fa fa-plus" aria-hidden="true"></i></button>
+        <div class="mt-4 w-100">
+            <button class="btn btn-danger w-100" id="add_product">Add Product</button>
         </div>
     </div>
-    <label class="mb-2">Product Description </label>
-    <textarea draggable="false" class="form-control" rows="5"></textarea>
+</main>
+<div class="modal fade" id="CategoryModal" tabindex="-1" aria-labelledby="CategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="CategoryModalLabel">Add Category</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+         <div>
+            <label class="w-100">Category Name*</label>
+            <input class="form-control w-100" type="text" id="cateName">
+         </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="closeCate" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" id="addCate" class="btn btn-primary">Add</button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="col-md-4">
-    <label class="mb-1">FIRST BAG</label>
-    <input class="form-control" type="time">
-    <label class="mb-1">LAST BAG</label>
-    <input class="form-control" type="time">
-    <label class="mb-1">FIRST BCT RAMP</label>
-    <input class="form-control" type="time">
-    <label class="mb-1">LAST BCT RAMP</label>
-    <input class="form-control" type="time">
-    <label class="mb-1">NO OF BAGS</label>
-    <input class="form-control" type="Text">
-  </div>
-
-</div>
-
-</div>
-  </main>
-
-  {% endblock %}
+{% endblock %}
+{% block javascript %}
+<script>
+    $(document).ready(function() {
+       
+        // Call the function to load categories when the document is ready
+        loadCategories();
+    });
+    </script>
+<script src="https://unpkg.com/petite-vue"></script>
+<script>
+    PetiteVue.createApp({
+        fields: [],
+        fieldCounter: 0, // To generate unique fieldIds
+        fieldName: '',
+        fieldPrice: '',
+        addField() {
+            if (this.fieldName === '' || this.fieldPrice === '') {
+                return;
+            }
+            this.fieldCounter++;
+            this.fields.push({
+                fieldId: this.fieldCounter,
+                fieldName: this.fieldName,
+                typePrice: this.fieldPrice
+            });
+            this.fieldName = '';
+            this.fieldPrice = ''; 
+        },
+        removeField(fieldId) {
+            const indexToRemove = this.fields.findIndex(field => field.fieldId === fieldId);
+            if (indexToRemove !== -1) {
+                this.fields.splice(indexToRemove, 1);
+            }
+        },
+        submitForm() {
+            console.log(this.fields);
+        },
+        $delimiters: ['$[[', ']]']
+    }).mount('#app');
+</script>
+{% endblock %}
