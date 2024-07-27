@@ -16,6 +16,10 @@ def index():
 def add_product():
     return render_template('add/add_product.html')
 
+@routes.route('/view_product')
+def view_product():
+    return render_template('view/view_product.html')
+
 @routes.route('/dashboard')
 def dashboard():
     return render_template('welcome.html')
@@ -106,7 +110,7 @@ def get_categories():
     
     return jsonify(categories_list), 200
 
-@routes.route('/create_product', methods=['POST'])
+@routes.route('/product/create', methods=['POST'])
 def create_product():
     try:
         # Get data from the request
@@ -157,6 +161,77 @@ def create_product():
     except Exception as e:
         print(e)
         return jsonify({'status': 500, 'message': 'Internal Server Error'}), 500
+    
+@routes.route('/product/get/all', methods=['GET'])
+def get_all_product():
+    try:
+       
+        cur = mysql.connection.cursor()
+        cur.execute('''SELECT 
+                        p.id,
+                        p.name AS "product name",
+                        c.name,
+                        p.description,
+                        u.username
+                    FROM 
+                        product p
+                    JOIN 
+                        category c ON c.id = p.category_id AND p.is_deleted = FALSE
+                    JOIN 
+                        users u ON u.id = p.created_by
+                    ORDER BY 
+                        p.created_at DESC;
+            ''')
+        
+        response=cur.fetchall()
+        cur.close()
+        return jsonify(response), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify({'status': 500, 'message': 'Internal Server Error'}), 500
+    
+@routes.route('/product/get/<int:id>', methods=['GET'])
+def get_by_id_product(id):
+    try:
+        cur = mysql.connection.cursor()
+        query = '''
+                SELECT 
+                    p.id,
+                    p.icon_url,
+                    p.name,
+                    p.price,
+                    p.category_id,
+                    p.description,
+                    p.custom_fields
+                FROM product p 
+                WHERE p.id = %s
+                '''
+        cur.execute(query, (id,))
+        
+        # Fetch one result as we're querying by ID
+        response = cur.fetchone()
+        cur.close()
+
+        if response:
+            # Map the result to a dictionary for better readability and usability in JSON response
+            product = {
+                "id": response[0],
+                "icon_url": response[1],
+                "name": response[2],
+                "price": response[3],
+                "category_id": response[4],
+                "description": response[5],
+                "custom_fields": response[6]
+            }
+            return jsonify(product), 200
+        else:
+            return jsonify({'status': 404, 'message': 'Product not found'}), 404
+
+    except Exception as e:
+        print(e)  # Log the error for debugging purposes
+        return jsonify({'status': 500, 'message': 'Internal Server Error'}), 500
+
 
 @routes.route('/menudata',methods=['GET', 'POST'])
 def get_data():

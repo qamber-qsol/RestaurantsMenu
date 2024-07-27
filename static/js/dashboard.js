@@ -214,3 +214,13 @@ function getAllCustomfield() {
     console.log(result);  // Log the result to the console
     return result;
 }
+
+$(document).on('click', "#updatebtn", function() {
+    var id = $(this).attr('data-id');
+    console.log("value ",id);
+    $('#product_update_model').modal({
+        show: 'false'
+    });
+    
+
+});
