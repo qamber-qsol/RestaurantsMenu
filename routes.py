@@ -1,3 +1,4 @@
+import datetime
 import csv ,os,json
 import boto3
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session ,jsonify
@@ -57,7 +58,7 @@ def add_user():
         hashed_password = generate_password_hash(password)
         
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)", (name, email, hashed_password))
+        cur.execute("INSERT INTO users (name, email, password) VALUES (%s, %s, %s)", (name, email, hashed_password))
         mysql.connection.commit()
         cur.close()
         
@@ -107,21 +108,21 @@ def get_categories():
     cur.close()
     
     categories_list = [{'id': cat[0], 'name': cat[1]} for cat in categories]
-    
+    print(categories_list)
     return jsonify(categories_list), 200
-
-@routes.route('/product/create', methods=['POST'])
+@routes.route('/product/create', methods=['POST', 'PUT'])
 def create_product():
     try:
         # Get data from the request
+        userID = session.get('Uid')
         data = request.json
+        print(data)
         img_icon = data.get('img_icon')
         product_name = data.get('product_name')
         product_price = data.get('product_price')
         product_category_id = data.get('product_category_id')
         product_desc = data.get('product_desc')
         custom_field = data.get('custom_field')
-
         # Validate inputs
         if not img_icon or img_icon == 'https://dl5hm3xr9o0pk.cloudfront.net/instagram/p-details-big.jpg':
             return jsonify({'status': 400, 'message': 'Product image is required'}), 400
@@ -144,23 +145,38 @@ def create_product():
 
         # Connect to the database
         cur = mysql.connection.cursor()
+        currentDatetime = datetime.datetime.now()
+        print("CUSTOM: ",custom_field)
 
-        
-        # Insert product into the database
-        cur.execute("""
-            INSERT INTO product (name, price, icon_url, description, category_id, custom_fields)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, (product_name, product_price, img_icon, product_desc, product_category_id, custom_field_json))
-        
-        mysql.connection.commit()
-        cur.close()
-        
+        if request.method == 'POST':
+            # Insert a new product
+            cur.execute("""
+                INSERT INTO product (name, price, icon_url, description, category_id, custom_fields, created_by, created_at, is_deleted)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (product_name, product_price, img_icon, product_desc, product_category_id, custom_field_json, userID, currentDatetime, False))
+            mysql.connection.commit()
+            cur.close()
+            return jsonify({'status': 200, 'message': 'Product added successfully'}), 200
 
-        return jsonify({'status': 200, 'message': 'Product added successfully'}), 200
+        elif request.method == 'PUT':
+            # Update an existing product
+            product_id = data.get('id')
+            if not product_id:
+                return jsonify({'status': 400, 'message': 'Product ID is required for update'}), 400
+
+            cur.execute("""
+                UPDATE product
+                SET name=%s, price=%s, icon_url=%s, description=%s, category_id=%s, custom_fields=%s, updated_by=%s, updated_at=%s
+                WHERE id=%s
+            """, (product_name, product_price, img_icon, product_desc, product_category_id, custom_field_json, userID, currentDatetime, product_id))
+            mysql.connection.commit()
+            cur.close()
+        return jsonify({'status': 200, 'message': 'Product updated successfully'}), 200
 
     except Exception as e:
         print(e)
         return jsonify({'status': 500, 'message': 'Internal Server Error'}), 500
+
     
 @routes.route('/product/get/all', methods=['GET'])
 def get_all_product():
@@ -172,7 +188,7 @@ def get_all_product():
                         p.name AS "product name",
                         c.name,
                         p.description,
-                        u.username
+                        u.name
                     FROM 
                         product p
                     JOIN 
@@ -232,6 +248,31 @@ def get_by_id_product(id):
         print(e)  # Log the error for debugging purposes
         return jsonify({'status': 500, 'message': 'Internal Server Error'}), 500
 
+@routes.route('/product/delete/<int:id>', methods=['DELETE'])
+def delete_by_id_product(id):
+    try:
+        cur = mysql.connection.cursor()
+        query = '''
+                UPDATE product p SET p.is_deleted=1
+                WHERE p.id = %s
+                '''
+        cur.execute(query, (id,))
+        
+        # Check if any row was affected
+        if cur.rowcount > 0:
+            mysql.connection.commit()
+            cur.close()
+            return jsonify({'status': 200, 'message': 'Product successfully removed!'}), 200
+        else:
+            cur.close()
+            return jsonify({'status': 404, 'message': 'Product not found'}), 404
+
+    except Exception as e:
+        print(e)  # Log the error for debugging purposes
+        return jsonify({'status': 500, 'message': 'Internal Server Error'}), 500
+
+
+
 
 @routes.route('/menudata',methods=['GET', 'POST'])
 def get_data():
@@ -242,6 +283,34 @@ def get_data():
 			for row in reader:
 				data.append(row)
 		return jsonify(data)
+
+
+
+# @routes.route('/test', methods=['GET', 'POST'])
+# def test():
+#     if request.method == 'GET':
+#         cur = mysql.connection.cursor()
+#         currentDatetime = datetime.datetime.now()
+#         userID = 1 
+#         custom_fields = None 
+#         data = []
+#         with open('new.csv', mode='r') as file:
+#             reader = csv.reader(file)
+#             for row in reader:
+#                 data.append(row)
+        
+#         print("Data read from CSV:", data)  
+#         # query = """
+#         #     INSERT INTO product (name, price, icon_url, description, category_id, custom_fields, created_by, created_at, is_deleted)
+#         #     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+#         # """ 
+#         # values = [(row[1], row[2], row[0], "", row[3], custom_fields, userID, currentDatetime, False) for row in data]
+#         # cur.executemany(query, values)
+#         # mysql.connection.commit()
+#         # cur.close()
+#         return jsonify(data), 200
+
+
 
 @routes.route('/logout')
 def logout():

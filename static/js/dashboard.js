@@ -1,3 +1,4 @@
+let globalID=0
 let baseUrl = new URL(window.location.href);
 baseUrl = `${baseUrl.protocol}//${baseUrl.hostname}:${baseUrl.port}`;
 function myshowLoader() {
@@ -166,7 +167,7 @@ $(document).on('click', "#add_product", function() {
 
     axios({
         method: 'POST',
-        url: baseUrl + '/create_product',
+        url: baseUrl + '/product/create',
         data: {
             img_icon: img_icon,
             product_name: product_name,  
@@ -177,6 +178,7 @@ $(document).on('click', "#add_product", function() {
         }  
     }).then(res => {
         const response = res.data;
+        console.log(response)
         if(response.status !== 200) {
             showToastMessage('error', 'Something Went Wrong!');
             myhideLoader();
@@ -186,9 +188,11 @@ $(document).on('click', "#add_product", function() {
         location.reload(true);
     }).catch(err => {
         myhideLoader();
+        console.log(err)
         showToastMessage('error', 'Something Went Wrong!');
     });
 });
+
 
 
 function getAllCustomfield() {
@@ -214,13 +218,156 @@ function getAllCustomfield() {
     console.log(result);  // Log the result to the console
     return result;
 }
-
+$('#customfieldForm').on('click', '.btn', function(event) {
+    event.preventDefault(); // Prevent the form from submitting (if it's inside a form)
+    
+    // Remove the parent div with the class 'CustomFields'
+    $(this).closest('.CustomFields').remove();
+});
 $(document).on('click', "#updatebtn", function() {
     var id = $(this).attr('data-id');
     console.log("value ",id);
-    $('#product_update_model').modal({
-        show: 'false'
-    });
+    axios({
+        method: 'GET',
+        url: baseUrl + `/product/get/${id}` 
+    }).then(res => {
+        const response = res.data;
+        console.log(response)
+        globalID=response.id;
+            
+        $('#product_icon').attr('src',response.icon_url);
+        $('#product_name').val(response.name);
+        $('#product_price').val(response.price)
+        $('#mycategory').val(response.category_id);
+        $('#product_desc').val(response.description)
+        $('#rndfk').click();
+        let form=$('#customfieldForm');
+        let data = JSON.parse(response.custom_fields)
+        form.html('')
+        $.each(data.option, function(key, value) {
+            // Create the HTML structure
+            let customField = `
+                <div class="my-1 CustomFields">
+                    <div class="align-items-center d-flex">
+                        <label class="m-0 pr-3 label_title text-capitalize">${key}:</label>
+                        <input class="bg-white label_value border fieldName form-control shadow-none" value="${value}">
+                        <button class="btn form-control h-100 text-danger w-auto"><i class="bx bx-trash h3 m-0 p-0"></i></button>
+                    </div>
+                </div>
+            `;
+            // Append the generated HTML to the form
+            form.append(customField);
+        });
+        
+    }).catch(err => {
+        myhideLoader();
+        console.log(err)
+        showToastMessage('error', 'Something Went Wrong!');
+    });    
     
 
 });
+
+$(document).on('click', "#deletebtn", function() {
+    var id = $(this).attr('data-id');
+    console.log("value ", id);
+    
+    Swal.fire({
+        title: "Are you sure?",
+        text: "Product will permanently deleted!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d10000",
+        cancelButtonColor: "#212529",
+        confirmButtonText: "Yes, delete it!"
+  }).then((result) => {
+    if (result.isConfirmed) {
+            axios({
+                method: 'DELETE',
+                url: baseUrl + `/product/delete/${id}` 
+            }).then(res => {
+                const response = res.data;
+                console.log(response);
+                if (response.status !== 200) {
+                    showToastMessage('error', response.message);
+                    myhideLoader();
+                    return;
+                }
+                showToastMessage('success', response.message);
+                location.reload(true);
+            }).catch(err => {
+                myhideLoader();
+                console.log(err);
+                showToastMessage('error', 'Something Went Wrong!');
+            });
+        }
+    });
+});
+
+$(document).on('click', "#update_product", function() {
+    myshowLoader();
+    
+ 
+    let img_icon = $('#product_icon').attr('src');
+    let product_name = $('#product_name').val().trim();
+    let product_price = $('#product_price').val().trim();
+    let product_category_id = $('#mycategory').val();
+    let product_desc = $('#product_desc').val().trim();
+    
+    // Check if product image is the default image (i.e., not changed by the user)
+    if (img_icon === 'https://dl5hm3xr9o0pk.cloudfront.net/instagram/p-details-big.jpg') {
+        showToastMessage('error', 'Please upload a product image!');
+        myhideLoader();
+        return;
+    }
+
+    // Validate required fields
+    if (!product_name || !product_price || !product_category_id || !product_desc) {
+        showToastMessage('error', 'Please fill in all required fields!');
+        myhideLoader();
+        return;
+    }
+
+    // Validate product price
+    if (isNaN(product_price) || parseFloat(product_price) <= 0) {
+        showToastMessage('error', 'Please enter a valid price!');
+        myhideLoader();
+        return;
+    }
+
+    // Validate product category
+    if (parseInt(product_category_id) <= 0) {
+        showToastMessage('error', 'Please select a valid category!');
+        myhideLoader();
+        return;
+    }
+
+    axios({
+        method: 'PUT',
+        url: baseUrl + '/product/create',
+        data: {
+            id:globalID,
+            img_icon: img_icon,
+            product_name: product_name,  
+            product_price: product_price,
+            product_category_id: product_category_id,
+            product_desc: product_desc,
+            custom_field: getAllCustomfield()
+        }  
+    }).then(res => {
+        const response = res.data;
+        console.log(response)
+        if(response.status !== 200) {
+            showToastMessage('error', 'Something Went Wrong!');
+            myhideLoader();
+            return;
+        }
+        showToastMessage('success', 'Successfully Product Update!');
+        location.reload(true);
+    }).catch(err => {
+        myhideLoader();
+        console.log(err)
+        showToastMessage('error', 'Something Went Wrong!');
+    });
+});
+
