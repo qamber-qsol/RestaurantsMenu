@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="{{ url_for('static', filename='icon/favicon.ico') }}" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Admin login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
 </head>
 <body>
     <div class="container">
         <h2 class="login-title">Admin Log in</h2>
         <div style="display: flex; justify-content: center; margin: 0 0 61px 0px;">
-            <img src="https://barbqtonight.com/assets/img/bbqtonight.png" class="img-fluid" style="max-width: 190px;">
+            <img src="https://dl5hm3xr9o0pk.cloudfront.net/instagram/barbqtonightlogo.png" class="img-fluid" style="max-width: 190px;">
         </div>
         <form class="login-form" action="{{ url_for('routes.login') }}" method="POST">
             <div>

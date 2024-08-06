@@ -4,6 +4,7 @@
 <head>
 	<title>Bar B Tonight Menu</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="{{ url_for('static', filename='icon/favicon.ico') }}" type="image/x-icon">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='nav.css') }}">
 	<script src="https://kit.fontawesome.com/3a44b96126.js" crossorigin="anonymous"></script>
 	<link rel="stylesheet"
@@ -22,16 +23,25 @@
 			align-items: center;
 			justify-content: center;
 			z-index: 99999;
-		}
+			}
 
-		.loader {
+			.loader {
 			border: 5px solid #f3f3f3;
 			border-top: 5px solid #3498db;
 			border-radius: 50%;
 			width: 50px;
 			height: 50px;
 			animation: spin 1s linear infinite;
-		}
+			}
+			@keyframes spin {
+			from {
+				transform: rotate(0deg);
+			}
+			to {
+				transform: rotate(360deg);
+			}
+			}
+
 
 		.modal-header {
 			.close {
@@ -137,7 +147,7 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="d-flex justify-content-center mb-4 p-0 page_title text-center">
-						<img src="https://barbqtonight.com/assets/img/bbqtonight.png" class="img-fluid" style="
+						<img src="https://dl5hm3xr9o0pk.cloudfront.net/instagram/barbqtonightlogo.png" class="img-fluid" style="
     max-width: 190px;
 ">
 						<div class="single_line"></div>
@@ -168,8 +178,8 @@
 			document.querySelector('.loader-wrapper').style.display = 'flex';
 			console.log(baseUrl);
 			axios({
-				method: 'POST',
-				url: baseUrl + '/menudata',
+				method: 'GET',
+				url: baseUrl + '/product/get/list',
 
 			}).then(res => {
 				let data = res.data;
@@ -186,20 +196,20 @@
 				console.log(tabs);
 				$.each(tabs, function (category, items) {
 					console.log("ok")
-					var navPill = $('<li class="nav-item"><a class="nav-link" id="' + category + '-tab" data-toggle="pill" href="#' + category + '" role="tab" aria-controls="' + category + '" aria-selected="true">' + category.replace(/_/g, ' ') + '</a></li>');
+					var navPill = $('<li class="nav-item"><a class="nav-link" id="' + formatName(category) + '-tab" data-toggle="pill" href="#' + formatName(category) + '" role="tab" aria-controls="' + formatName(category) + '" aria-selected="true">' + category + '</a></li>');
 					$('#myTab').append(navPill);
 
 					// var tabPane = $('<div class="tab-pane fade" id="' + category + '" role="tabpanel" aria-labelledby="' + category + '-tab"></div>');
 					// var content = '';
 					const tabcontent = `
-				<div class="tab-pane fade show " id="${category}" role="tabpanel" aria-labelledby="breakfast-tab">
+				<div class="tab-pane fade show " id="${formatName(category)}" role="tabpanel" aria-labelledby="breakfast-tab">
 						<div class="row">
 							
 								${items.map(data => `
 								<div class="col-xl-2 col-lg-3 col-md-4 h-100 m-0 p-0 px-1 col-sm-6 pb-2 col-6"><div class="bg-white  h-100 p-2 shadow-lg single_menu" data-menuoption='${data[4]}'>
 									<div class="m-0 p-0">
 										<div class="border-0"><img class="MenuImage" src="${data[0]}"></div>
-										<div><div class="text-capitalize font-weight-bold h6 my-3 text-center text-dark MenuTitle">${formatName(data[1])}</div></div>
+										<div><div class="text-capitalize font-weight-bold h6 my-3 text-center text-dark MenuTitle">${data[1]}</div></div>
 										<div class="border-top font-weight-bold px-0 py-3 text-center MenuPrice">From Rs. ${data[3]}</div>
 									</div>
 									</div>
@@ -212,25 +222,21 @@
 
 
 					$('#myTabContent').append(tabcontent);
-					$('#BBQ_Special').addClass('active');
+					$("#myTab li:first-child").addClass("active");
+					$("#myTabContent .tab-pane:first-child").addClass("active show");
+					setTimeout(function() {
+						document.querySelector('.loader-wrapper').style.display = 'none';
+						}, 2000);
 
-					$('#BBQ_Special-tab').addClass('active');
-					document.querySelector('.loader-wrapper').style.display = 'none';
 				});
 
 			}).catch(err => {
 				console.error(err);
 			});
-			function formatName(filename) {
-
-				let nameWithoutExtension = filename.split('.').slice(0, -1).join('.');
-				let formattedName = nameWithoutExtension.replace(/-/g, ' ');
-				formattedName = formattedName.replace(/\b\w/g, function (char) {
-					return char.toUpperCase();
-				});
-
-				return formattedName;
+			function formatName(name) {
+				return name.replace(/\s+/g, '-');
 			}
+							
 			$(document).on('click', '.single_menu', function(){
         console.log("CLICKED!");
 		$('#optionMain').addClass('d-none')
